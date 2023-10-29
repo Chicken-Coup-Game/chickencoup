@@ -1,5 +1,58 @@
 import random
 
+# Define a dictionary to store the farm data
+farm = {
+    "location": (10, 10),  # Adjust the location of the farm
+    "size": 5,  # Adjust the size of the farm
+    "crops": [],  # Store planted crops
+    "special_chickens": [],  # Store special chickens obtained from crops
+}
+
+
+# Function to handle farm interactions
+def handle_farm_interaction(player_position, available_crops=None, special_chicken_crops=None):
+    if player_position == farm["location"]:
+        print("You have entered your farm.")
+        while True:
+            action = input(
+                "What would you like to do on your farm? (P)lant crops, (H)arvest, (C)heck crops, or (L)eave: ").upper()
+
+            if action == "L":
+                print("You leave your farm.")
+                break
+            elif action == "P":
+                # Plant crops
+                crop_type = input("Choose a crop to plant (e.g., Wheat, Corn): ")
+                if crop_type in available_crops:
+                    if len(farm["crops"]) < farm["size"]:
+                        farm["crops"].append(crop_type)
+                        print(f"You planted {crop_type} on your farm.")
+                    else:
+                        print("Your farm is full. Harvest some crops before planting more.")
+                else:
+                    print("Invalid crop type.")
+            elif action == "H":
+                # Harvest crops
+                if farm["crops"]:
+                    harvested_crop = farm["crops"].pop(0)  # Remove the first planted crop
+                    print(f"You harvested {harvested_crop}.")
+                    # Check if a special chicken can be obtained
+                    if harvested_crop in special_chicken_crops:
+                        obtained_chicken = special_chicken_crops[harvested_crop]
+                        farm["special_chickens"].append(obtained_chicken)
+                        print(f"You obtained a special chicken: {obtained_chicken}")
+                else:
+                    print("No crops to harvest.")
+            elif action == "C":
+                # Check planted crops
+                if farm["crops"]:
+                    print("Crops on your farm:")
+                    for crop in farm["crops"]:
+                        print(crop)
+                else:
+                    print("No crops planted on your farm.")
+
+
 # Define the rare chicken types and their traits
 chicken_types = {
     "Embercluckers": "Resistant to heat and fire, warm eggs",
@@ -58,14 +111,17 @@ splash_texts = [
 ]
 
 # Define the size of the map
-map_size = 30  # Increase the map size
+map_size = 30 # Increase the map size
 
 # Create a list of chicken locations on the Isle of Cverkil
 chicken_locations = []
 
+
 # Generate random chicken locations
 def generate_chicken_locations():
-    return [(random.choice(list(chicken_types.keys())), (random.randint(1, map_size), random.randint(1, map_size))) for _ in range(20)]  # Increase the number of chickens
+    return [(random.choice(list(chicken_types.keys())), (random.randint(1, map_size), random.randint(1, map_size))) for
+            _ in range(20)]  # Increase the number of chickens
+
 
 # Define player's starting position
 player_position = (15, 15)  # Adjust the starting position for the larger map
@@ -76,6 +132,7 @@ chicken_inventory = []
 # Initialize player's achievements
 player_achievements = set()
 
+
 # Define NPC characters with side quests
 def create_npc(name, description, quest, locations):
     return {
@@ -84,6 +141,7 @@ def create_npc(name, description, quest, locations):
         "quest": quest,
         "location": random.choice(locations)
     }
+
 
 npc_locations = [(8, 8), (10, 10), (5, 20)]  # Example locations for NPCs
 npcs = [
@@ -137,6 +195,7 @@ islands = {
     # Add more islands with their features here...
 }
 
+
 # Function to handle NPC interactions and quests
 def handle_npc_interaction(player_position):
     for npc in npcs:
@@ -152,6 +211,7 @@ def handle_npc_interaction(player_position):
                 print(f"Quest '{npc['quest']['name']}' added to your quest log.")
             else:
                 print(f"You declined {npc['name']}'s quest.")
+
 
 # Function to handle quest menu
 def quest_menu():
@@ -178,6 +238,7 @@ def quest_menu():
         except ValueError:
             print("Invalid input. Please enter a quest number.")
 
+
 # Function to display the map
 def display_map(player_position, chicken_locations, npcs):
     for row in range(islands[current_island]["map_size"], 0, -1):
@@ -191,6 +252,7 @@ def display_map(player_position, chicken_locations, npcs):
             else:
                 print(".", end=" ")  # Empty space
         print()  # Move to the next row
+
 
 # Game loop
 current_island = "Island of Cverkil"  # Set the initial island
@@ -219,7 +281,8 @@ while True:
             # Game loop for the current island
             while True:
                 print(f"You are at position {islands[current_island]['player_position']}.")
-                action = input("Do you want to move (N/S/E/W), check inventory (I), check achievements (A), check quests (Q), or quit (X)? ").upper()
+                action = input(
+                    "Do you want to move (N/S/E/W), check inventory (I), check achievements (A), check quests (Q), enter your farm (f)* or quit (X)? *to enter farm go to 10,10 ").upper()
 
                 if action == "X":
                     print("You have quit the game.")
@@ -227,16 +290,20 @@ while True:
                 elif action in ("N", "S", "E", "W"):
                     if action == "N":
                         islands[current_island]["player_position"] = (
-                            islands[current_island]["player_position"][0], islands[current_island]["player_position"][1] + 1)
+                            islands[current_island]["player_position"][0],
+                            islands[current_island]["player_position"][1] + 1)
                     elif action == "S":
                         islands[current_island]["player_position"] = (
-                            islands[current_island]["player_position"][0], islands[current_island]["player_position"][1] - 1)
+                            islands[current_island]["player_position"][0],
+                            islands[current_island]["player_position"][1] - 1)
                     elif action == "E":
                         islands[current_island]["player_position"] = (
-                            islands[current_island]["player_position"][0] + 1, islands[current_island]["player_position"][1])
+                            islands[current_island]["player_position"][0] + 1,
+                            islands[current_island]["player_position"][1])
                     elif action == "W":
                         islands[current_island]["player_position"] = (
-                            islands[current_island]["player_position"][0] - 1, islands[current_island]["player_position"][1])
+                            islands[current_island]["player_position"][0] - 1,
+                            islands[current_island]["player_position"][1])
 
                     for chicken_type, location in islands[current_island]["chicken_locations"]:
                         if location == islands[current_island]["player_position"]:
@@ -257,7 +324,8 @@ while True:
                                 player_achievements.add("Egg Hunter")
                                 print("Achievement Unlocked: Egg Hunter")
 
-                            if "Expert Aviculturist" not in player_achievements and len(chicken_inventory) == len(chicken_types):
+                            if "Expert Aviculturist" not in player_achievements and len(chicken_inventory) == len(
+                                    chicken_types):
                                 player_achievements.add("Expert Aviculturist")
                                 print("Achievement Unlocked: Expert Aviculturist")
 
@@ -272,14 +340,21 @@ while True:
                         print(achievement)
 
                 if action == "Q":
-                    quest_menu()  # Call the quest menu function
+                    quest_menu()  # Call the quest menu function elif action == "F":
 
+                elif action == "F":
+                    # Check if the player is at the farm location
+                    if islands[current_island]["player_position"] == farm["location"]:
+                        handle_farm_interaction(islands[current_island]["player_position"])
+                    else:
+                        print("You are not at your farm.")
                 # Handle NPC interactions and quests for the current island
                 handle_npc_interaction(islands[current_island]["player_position"])
 
                 if not islands[current_island]["chicken_locations"]:
                     print(f"Congratulations! You've found all the rare chickens on the {current_island}.")
                     islands[current_island]["chicken_locations"] = generate_chicken_locations()
+
 
                 # Check for map transition logic (e.g., move to another island)
                 def player_reaches_edge_of_map():
